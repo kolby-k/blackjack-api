@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const router = require("./routes");
 
 const app = express();
 
@@ -10,6 +11,8 @@ app.use(express.json());
 app.get("/health", (req, res) => {
   res.status(200).send("<h1>Hello! I am alive and well.</h1>");
 });
+
+app.use("/api/blackjack", router());
 
 app.use((err, req, res, next) => {
   console.error("Error stack:", err.stack);
