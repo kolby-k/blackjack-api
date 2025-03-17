@@ -4,7 +4,7 @@ module.exports = {
   RANKS: ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"],
   MIN_BET: 10,
   MAX_BET: 100,
-
+  INITIAL_BANKROLL: 500,
   // Example “rules” you might configure
   DEFAULT_RULES: {
     decks: 1,

@@ -1,5 +1,5 @@
 // deck.js
-const { SUITS, RANKS } = require("./constants");
+const { SUITS, RANKS } = require("../constants");
 
 class Deck {
   constructor(numberOfDecks = 1) {
