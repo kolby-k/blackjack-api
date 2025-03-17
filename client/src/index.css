@@ -28,6 +28,10 @@ main {
 
 #screen {
   min-height: 50vh;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  border: 1px solid purple;
 }
 
 #header {
