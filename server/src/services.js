@@ -6,27 +6,27 @@ const sessionInstances = {};
 module.exports = {
   // Create a new session and store it in memory
   startSession: () => {
-    const session = new Session();
-    sessionInstances[session.sessionId] = session;
-    return session.getSessionState();
+    const sessionObject = new Session();
+    sessionInstances[sessionObject.sessionId] = sessionObject;
+    return sessionObject.getSessionState();
   },
 
   // Start a new hand within a given session
   newHand: ({ sessionId, bet }) => {
-    const session = sessionInstances[sessionId];
-    if (!session) {
+    const sessionObject = sessionInstances[sessionId];
+    if (!sessionObject) {
       throw new Error("Session not found");
     }
-    const hand = session.startNewHand(bet);
+    const hand = sessionObject.startNewHand(parseFloat(bet));
     return hand.getHandState();
   },
 
   // Helper function to locate a hand by its handId across sessions
   findHandById: (handId) => {
-    for (const session of Object.values(sessionInstances)) {
-      const hand = session.hands.find((h) => h.handId === handId);
+    for (const sessionObject of Object.values(sessionInstances)) {
+      const hand = sessionObject.hands.find((h) => h.handId === handId);
       if (hand) {
-        return { hand, session };
+        return { hand, session: sessionObject };
       }
     }
     return null;
@@ -37,7 +37,7 @@ module.exports = {
     const result = module.exports.findHandById(handId);
     if (!result) throw new Error("Hand not found");
 
-    const { hand, session } = result;
+    const { hand, session: sessionObject } = result;
 
     // Let the hand do its action (which may move phase to 'completed')
     let updatedHandState;
@@ -58,24 +58,25 @@ module.exports = {
     // If the hand is now completed, settle it in the session
     // Then re-grab the final state after settlement:
     if (hand.phase === "completed") {
-      session.settleHand(hand);
+      sessionObject.settleHand(hand);
       updatedHandState = hand.getHandState();
     }
 
-    const currentSessionState = session.getSessionState();
+    const { session, hands } = sessionObject.getSessionState();
     return {
       updatedHand: updatedHandState,
-      currentSession: currentSessionState,
+      session,
+      hands,
     };
   },
 
   // End a session by sessionId and return session state and stats
   endSession: ({ sessionId }) => {
-    const session = sessionInstances[sessionId];
-    if (!session) {
+    const sessionObject = sessionInstances[sessionId];
+    if (!sessionObject) {
       throw new Error("Session not found");
     }
-    return session.endSession();
+    return sessionObject.endSession();
   },
 
   // Retrieve a hand's state by its handId

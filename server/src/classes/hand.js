@@ -39,6 +39,8 @@ class Hand {
       return { outcome: "lose", net: -this.bet };
     } else if (dealerTotal > 21) {
       return { outcome: "win", net: this.bet };
+    } else if (playerTotal > 21) {
+      return { outcome: "lose", net: -this.bet };
     } else if (playerTotal > dealerTotal) {
       return { outcome: "win", net: this.bet };
     } else if (playerTotal < dealerTotal) {
@@ -94,9 +96,12 @@ class Hand {
 
   // Return the current state of this hand
   getHandState() {
+    console.log(this.dealerHand);
     const playerTotal = this.getHandTotal(this.playerHand);
     const dealerTotal = this.getHandTotal(this.dealerHand);
-
+    const visibleTotal = this.getHandTotal([
+      this.dealerHand[1] === "Hidden" ? this.dealerHand[0] : this.dealerHand,
+    ]);
     let dealerCardsToShow = this.dealerHand;
     if (this.phase === "player_turn") {
       dealerCardsToShow = [this.dealerHand[0], "Hidden"];
@@ -121,6 +126,7 @@ class Hand {
       dealer: {
         hand: dealerCardsToShow,
         total: dealerTotal,
+        visibleTotal: visibleTotal,
         visibleCard: this.dealerHand[0],
       },
     };

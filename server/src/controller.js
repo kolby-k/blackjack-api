@@ -4,8 +4,8 @@ module.exports = {
   // Create a new blackjack session
   startNewSession: (req, res, next) => {
     try {
-      const session = services.startSession();
-      res.status(201).json({ session });
+      const sessionObject = services.startSession();
+      res.status(201).json(sessionObject);
     } catch (e) {
       next(e);
     }
@@ -15,6 +15,7 @@ module.exports = {
   startNewHand: (req, res, next) => {
     try {
       const { sessionId } = req.params;
+      if (!sessionId) throw new Error("Session ID is required");
       // Optionally, pass a bet or other data from req.body if needed:
       const hand = services.newHand({ sessionId, bet: req.body.bet });
       res.status(201).json({ hand });
@@ -28,12 +29,12 @@ module.exports = {
   playerAction: (req, res, next) => {
     try {
       const { handId, action, amount } = req.params;
-      const { updatedHand, currentSession } = services.playerAction({
+      const { updatedHand, session, hands } = services.playerAction({
         handId,
         action,
         amount,
       });
-      res.status(200).json({ hand: updatedHand, session: currentSession });
+      res.status(200).json({ hand: updatedHand, session, hands });
     } catch (e) {
       next(e);
     }
