@@ -36,15 +36,17 @@ function BlackjackScreen() {
 
   const dealHand = async () => {
     setLoading(true);
-    const { hand } = await api.dealNewHand({ sessionId, bet });
+    const { hand, session, hands } = await api.dealNewHand({ sessionId, bet });
     if (!hand) {
       setError("Error in api, dealNewHand");
       setLoading(false);
       return;
     }
 
+    setSession({ ...session });
+    setHandHistory([...hands]);
+    setHand({ ...hand });
     setLoading(false);
-    setHand(() => ({ ...hand }));
   };
 
   const handlePlayerAction = async (action) => {
@@ -148,10 +150,18 @@ function BlackjackScreen() {
                 {hand.phase === "player_turn" ? "Your Turn" : "Dealers Turn"}
               </h1>
               <h2 className="text-slate-200 font-semibold text-2xl text-center p-2">
-                Your Total: {hand.player.total}
+                Your Cards:{" "}
+                {hand.player.hand
+                  .map((card) => `${card.rank} of ${card.suit}`)
+                  .join(", ")}
               </h2>
               <h2 className="text-slate-200 font-semibold text-2xl text-center p-2">
-                Dealers Hand: {hand.dealer.visibleTotal}
+                Dealers Hand:{" "}
+                {hand.dealer.hand[1] === "Hidden"
+                  ? `${hand.dealer.hand[0].rank} of ${hand.dealer.hand[0].suit}`
+                  : hand.dealer.hand
+                      .map((card) => `${card.rank} of ${card.suit}`)
+                      .join(", ")}
               </h2>
               <pre className="text-slate-300 m-4 max-w-1/3 mx-auto">
                 {JSON.stringify(hand, null, 3)}

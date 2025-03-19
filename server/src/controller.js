@@ -17,8 +17,11 @@ module.exports = {
       const { sessionId } = req.params;
       if (!sessionId) throw new Error("Session ID is required");
       // Optionally, pass a bet or other data from req.body if needed:
-      const hand = services.newHand({ sessionId, bet: req.body.bet });
-      res.status(201).json({ hand });
+      const { hand, session, hands } = services.newHand({
+        sessionId,
+        bet: req.body.bet,
+      });
+      res.status(201).json({ hand, session, hands });
     } catch (e) {
       next(e);
     }

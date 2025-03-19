@@ -18,18 +18,21 @@ class Hand {
 
   startHand() {
     // Deal initial cards for both player and dealer
-    this.playerHand = this.deck.dealCards(2);
-    this.dealerHand = this.deck.dealCards(2);
-    // Optionally, check here for natural blackjack conditions.
+    this.playerHand = this.deck.deal(2);
+    this.dealerHand = this.deck.deal(2);
   }
 
   computeOutcomeAndPayout() {
     const playerTotal = this.getHandTotal(this.playerHand);
     const dealerTotal = this.getHandTotal(this.dealerHand);
+    console.log("pT: ", playerTotal);
+    console.log("dT: ", dealerTotal);
     const playerHas2CardBlackjack =
       this.playerHand.length === 2 && playerTotal === 21;
     const dealerHas2CardBlackjack =
       this.dealerHand.length === 2 && dealerTotal === 21;
+    console.log("playerHas2CardBlackjack: ", playerHas2CardBlackjack);
+    console.log("dealerHas2CardBlackjack: ", dealerHas2CardBlackjack);
 
     if (playerHas2CardBlackjack && dealerHas2CardBlackjack) {
       return { outcome: "push", net: 0 };
@@ -51,12 +54,13 @@ class Hand {
   }
 
   // Compute the total value of a given hand (array of cards)
+  // Updated getHandTotal to work with card objects
   getHandTotal(hand) {
     let total = 0;
     let aces = 0;
 
     for (const card of hand) {
-      const rank = card.slice(0, -1); // Remove the suit
+      const rank = card.rank;
       if (["J", "Q", "K"].includes(rank)) {
         total += 10;
       } else if (rank === "A") {
@@ -99,12 +103,19 @@ class Hand {
     console.log(this.dealerHand);
     const playerTotal = this.getHandTotal(this.playerHand);
     const dealerTotal = this.getHandTotal(this.dealerHand);
-    const visibleTotal = this.getHandTotal([
-      this.dealerHand[1] === "Hidden" ? this.dealerHand[0] : this.dealerHand,
-    ]);
+    let visibleTotal = this.getHandTotal([this.dealerHand]);
     let dealerCardsToShow = this.dealerHand;
-    if (this.phase === "player_turn") {
+
+    const playerHasNaturalBlackjack =
+      playerTotal === 21 && this.playerHand.length == 2;
+    const dealerHasNaturalBlackjack =
+      dealerTotal === 21 && this.dealerHand.length == 2;
+
+    if (playerHasNaturalBlackjack || dealerHasNaturalBlackjack) {
+      this.phase = "completed";
+    } else if (this.phase === "player_turn") {
       dealerCardsToShow = [this.dealerHand[0], "Hidden"];
+      visibleTotal = [this.dealerHand[0]];
     }
 
     return {
@@ -122,12 +133,14 @@ class Hand {
         hand: this.playerHand,
         total: playerTotal,
         allowedActions: this.getAllowedActions(),
+        naturalBlackjack: playerHasNaturalBlackjack,
       },
       dealer: {
         hand: dealerCardsToShow,
         total: dealerTotal,
         visibleTotal: visibleTotal,
         visibleCard: this.dealerHand[0],
+        naturalBlackjack: dealerHasNaturalBlackjack,
       },
     };
   }
@@ -143,7 +156,7 @@ class Hand {
     // Example: dealer hits until total >= 17 or (hits soft 17 if your rule says so)
     // (Expand if you have special rules like dealerHitsSoft17).
     while (this.getHandTotal(this.dealerHand) < 17) {
-      this.dealerHand.push(this.deck.dealCards(1)[0]);
+      this.dealerHand.push(this.deck.deal(1)[0]);
     }
 
     // Once dealer is finished, mark the hand completed
@@ -154,7 +167,7 @@ class Hand {
     if (this.phase !== "player_turn") {
       throw new Error("Cannot hit at this time");
     }
-    const card = this.deck.dealCards(1)[0];
+    const card = this.deck.deal(1)[0];
     this.playerHand.push(card);
     this.lastAction = "hit";
 
@@ -194,7 +207,7 @@ class Hand {
     this.lastAction = "double";
 
     // Deal one card to player...
-    const card = this.deck.dealCards(1)[0];
+    const card = this.deck.deal(1)[0];
     this.playerHand.push(card);
 
     // Then automatically go to dealer's turn

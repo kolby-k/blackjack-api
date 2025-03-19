@@ -17,8 +17,25 @@ module.exports = {
     if (!sessionObject) {
       throw new Error("Session not found");
     }
-    const hand = sessionObject.startNewHand(parseFloat(bet));
-    return hand.getHandState();
+    let hand = sessionObject.startNewHand(parseFloat(bet));
+
+    // verify the hand is not over (eg. player or dealer dealt blackjack)
+    const playerTotal = hand.playerHand.reduce(
+      (acc, cur) => acc + cur.value,
+      0
+    );
+    const dealerTotal = hand.dealerHand.reduce(
+      (acc, cur) => acc + cur.value,
+      0
+    );
+    console.log("player val: ", hand.playerHand);
+    if (playerTotal === 21 || dealerTotal === 21) {
+      sessionObject.settleHand(hand);
+    }
+    let handState = hand.getHandState();
+    const { session, hands } = sessionObject.getSessionState();
+
+    return { hand: handState, session, hands };
   },
 
   // Helper function to locate a hand by its handId across sessions

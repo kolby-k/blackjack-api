@@ -16,6 +16,8 @@ class Session {
   // Start a new hand within the session
   startNewHand(bet) {
     // You can add validations here for bet limits, bankroll, etc.
+    this.deck.createDeck();
+    this.deck.shuffle();
     const hand = new Hand(this.deck, bet, this.rules);
     this.hands.push(hand);
     return hand;
