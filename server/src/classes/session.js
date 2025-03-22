@@ -34,16 +34,17 @@ class Session {
   // Return the current state of the session
   getSessionState() {
     return {
-      session: {
-        sessionId: this.sessionId,
-        createdAt: this.createdAt,
-        endedAt: this.endedAt,
-        playerBankroll: this.playerBankroll,
-        rules: this.rules,
-      },
-      // Each Hand instance must implement getHandState
-      hands: this.hands.map((hand) => hand.getHandState()),
+      sessionId: this.sessionId,
+      createdAt: this.createdAt,
+      endedAt: this.endedAt,
+      playerBankroll: this.playerBankroll,
+      rules: this.rules,
     };
+  }
+
+  getHandHistory() {
+    // Each Hand instance must implement getHandState
+    return { hands: this.hands.map((hand) => hand.getHandState()) };
   }
 
   // Optionally, add a method to aggregate session stats

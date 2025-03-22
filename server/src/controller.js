@@ -17,11 +17,11 @@ module.exports = {
       const { sessionId } = req.params;
       if (!sessionId) throw new Error("Session ID is required");
       // Optionally, pass a bet or other data from req.body if needed:
-      const { hand, session, hands } = services.newHand({
+      const { hand, session } = services.newHand({
         sessionId,
         bet: req.body.bet,
       });
-      res.status(201).json({ hand, session, hands });
+      res.status(201).json({ hand, session });
     } catch (e) {
       next(e);
     }
@@ -31,13 +31,12 @@ module.exports = {
   // The optional "amount" parameter can be used for bets or similar actions.
   playerAction: (req, res, next) => {
     try {
-      const { handId, action, amount } = req.params;
-      const { updatedHand, session, hands } = services.playerAction({
+      const { handId, action } = req.params;
+      const { hand, session } = services.playerAction({
         handId,
         action,
-        amount,
       });
-      res.status(200).json({ hand: updatedHand, session, hands });
+      res.status(200).json({ hand, session });
     } catch (e) {
       next(e);
     }
@@ -47,8 +46,8 @@ module.exports = {
   endSession: (req, res, next) => {
     try {
       const { sessionId } = req.params;
-      const { session, stats } = services.endSession({ sessionId });
-      res.status(200).json({ session, stats });
+      const { session, stats, hands } = services.endSession({ sessionId });
+      res.status(200).json({ session, stats, hands });
     } catch (e) {
       next(e);
     }
@@ -60,6 +59,16 @@ module.exports = {
       const { handId } = req.params;
       const hand = services.getHand({ handId });
       res.status(200).json({ hand });
+    } catch (e) {
+      next(e);
+    }
+  },
+
+  getSessionHands: (req, res, next) => {
+    try {
+      const { sessionId } = req.params;
+      const hands = services.getHandHistory({ sessionId });
+      res.status(200).json(hands);
     } catch (e) {
       next(e);
     }

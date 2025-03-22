@@ -27,10 +27,11 @@ main {
 }
 
 #screen {
-  min-height: 50vh;
+  min-height: 80vh;
   display: flex;
+  flex-direction: column;
   flex: 1;
-  justify-content: center;
+  justify-content: space-evenly;
   border: 1px solid purple;
 }
 
@@ -59,4 +60,77 @@ ul {
 #navlink {
   font-size: 1.5em;
   font-weight: 600;
+}
+
+#session-manager {
+  height: 205px;
+  background: rgb(40, 39, 39);
+  
+}
+
+/* Table */
+#table {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  width: 80vw;
+  margin: 2em auto;
+  border: 1px solid black;
+  border-radius: 100px;
+  padding: 1em;
+  position: relative;
+  background: rgb(2, 38, 2);
+}
+
+#card-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#bet-section {
+  position: absolute;
+  bottom: 1em;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* Card */
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 120px;
+  height: 180px;
+  border: 1px solid gray;
+  background: #2b2b2b;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+}
+
+.card-facedown {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 120px;
+  height: 180px;
+  border: 1px solid gray;
+  background: #2b2b2b;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  margin-left: -1.5em;
+}
+
+
+.top-rank {
+  align-self: flex-start;
+}
+
+.bottom-rank {
+  align-self: flex-end;
 }

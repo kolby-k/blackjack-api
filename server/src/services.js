@@ -17,25 +17,25 @@ module.exports = {
     if (!sessionObject) {
       throw new Error("Session not found");
     }
-    let hand = sessionObject.startNewHand(parseFloat(bet));
+    let newHand = sessionObject.startNewHand(parseFloat(bet));
 
     // verify the hand is not over (eg. player or dealer dealt blackjack)
-    const playerTotal = hand.playerHand.reduce(
+    const playerTotal = newHand.playerHand.reduce(
       (acc, cur) => acc + cur.value,
       0
     );
-    const dealerTotal = hand.dealerHand.reduce(
+    const dealerTotal = newHand.dealerHand.reduce(
       (acc, cur) => acc + cur.value,
       0
     );
-    console.log("player val: ", hand.playerHand);
-    if (playerTotal === 21 || dealerTotal === 21) {
-      sessionObject.settleHand(hand);
-    }
-    let handState = hand.getHandState();
-    const { session, hands } = sessionObject.getSessionState();
 
-    return { hand: handState, session, hands };
+    if (playerTotal === 21 || dealerTotal === 21) {
+      sessionObject.settleHand(newHand);
+    }
+    let hand = newHand.getHandState();
+    const session = sessionObject.getSessionState();
+
+    return { hand, session };
   },
 
   // Helper function to locate a hand by its handId across sessions
@@ -50,23 +50,22 @@ module.exports = {
   },
 
   // Process a player action on a hand by invoking its own methods
-  playerAction: ({ handId, action, amount }) => {
+  playerAction: ({ handId, action }) => {
     const result = module.exports.findHandById(handId);
     if (!result) throw new Error("Hand not found");
 
-    const { hand, session: sessionObject } = result;
+    const { hand: currentHand, session: sessionObject } = result;
 
     // Let the hand do its action (which may move phase to 'completed')
-    let updatedHandState;
     switch (action) {
       case "hit":
-        updatedHandState = hand.hit();
+        currentHand.hit();
         break;
       case "stand":
-        updatedHandState = hand.stand();
+        currentHand.stand();
         break;
       case "double":
-        updatedHandState = hand.double();
+        currentHand.double();
         break;
       default:
         throw new Error(`Unknown action: ${action}`);
@@ -74,16 +73,18 @@ module.exports = {
 
     // If the hand is now completed, settle it in the session
     // Then re-grab the final state after settlement:
-    if (hand.phase === "completed") {
-      sessionObject.settleHand(hand);
-      updatedHandState = hand.getHandState();
+    let hand;
+    if (currentHand.phase === "completed") {
+      sessionObject.settleHand(currentHand);
+      hand = currentHand.getHandState();
+    } else {
+      hand = currentHand.getHandState();
     }
 
-    const { session, hands } = sessionObject.getSessionState();
+    const session = sessionObject.getSessionState();
     return {
-      updatedHand: updatedHandState,
+      hand,
       session,
-      hands,
     };
   },
 
@@ -104,5 +105,13 @@ module.exports = {
     }
     const { hand } = result;
     return hand.getHandState();
+  },
+
+  getHandHistory: ({ sessionId }) => {
+    const sessionObject = sessionInstances[sessionId];
+    if (!sessionObject) {
+      throw new Error("Session not found");
+    }
+    return sessionObject.getHandHistory();
   },
 };

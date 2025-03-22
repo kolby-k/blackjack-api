@@ -15,8 +15,7 @@ module.exports = () => {
   );
 
   // Process player actions (hit, stand, double down, etc.) on a specific hand.
-  // The optional :amount parameter can be used for bets or similar actions.
-  router.post("/hands/:handId/:action/:amount?", (req, res, next) =>
+  router.post("/hands/:handId/:action", (req, res, next) =>
     controller.playerAction(req, res, next)
   );
 
@@ -28,6 +27,10 @@ module.exports = () => {
   // Retrieve the state of an existing hand by hand ID
   router.get("/hands/:handId", (req, res, next) =>
     controller.getHandState(req, res, next)
+  );
+
+  router.get("/sessions/hand-history/:sessionId", (req, res, next) =>
+    controller.getSessionHands(req, res, next)
   );
 
   return router;

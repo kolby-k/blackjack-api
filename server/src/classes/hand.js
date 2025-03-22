@@ -103,7 +103,8 @@ class Hand {
     console.log(this.dealerHand);
     const playerTotal = this.getHandTotal(this.playerHand);
     const dealerTotal = this.getHandTotal(this.dealerHand);
-    let visibleTotal = this.getHandTotal([this.dealerHand]);
+    let visibleTotal = this.getHandTotal(this.dealerHand);
+
     let dealerCardsToShow = this.dealerHand;
 
     const playerHasNaturalBlackjack =
@@ -115,7 +116,7 @@ class Hand {
       this.phase = "completed";
     } else if (this.phase === "player_turn") {
       dealerCardsToShow = [this.dealerHand[0], "Hidden"];
-      visibleTotal = [this.dealerHand[0]];
+      visibleTotal = this.dealerHand[0].value;
     }
 
     return {
