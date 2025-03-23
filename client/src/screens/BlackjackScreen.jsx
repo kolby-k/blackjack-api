@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SessionManager from "../components/SessionManager";
 import HandHistroy from "../components/HandHistroy";
 import Table from "../components/Table";
 
 function BlackjackScreen() {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState({ playerBankroll: 500 });
   const [hand, setHand] = useState(null);
   const [handHistory, setHandHistory] = useState([]);
 
   const [bet, setBet] = useState(10);
-  const [startingBankroll, setStartingBankroll] = useState(500);
 
   const updateHandHistory = (newHand) => {
     setHandHistory((prev) => [...prev, newHand]);
@@ -18,26 +17,36 @@ function BlackjackScreen() {
     setSession((prev) => ({ ...prev, ["playerBankroll"]: balance }));
   };
 
-  console.log(session);
+  const endSession = () => {
+    console.log("TODO");
+    setHand(null);
+  };
+
+  useEffect(() => {
+    if (bet > session.playerBankroll) {
+      setBet(session.playerBankroll);
+    }
+  }, [session]);
 
   return (
     <div id="screen">
       <SessionManager
         session={session}
         updateSession={setSession}
-        endSession={() => console.log("todo")}
-        updateBankroll={updateBankroll}
+        endSession={endSession}
+        netChange={hand?.netGain}
       />
       {session?.createdAt && (
         <Table
           sessionId={session?.sessionId}
           hand={hand}
           setHand={setHand}
-          startingBankroll={startingBankroll}
+          playerBankroll={session?.playerBankroll}
           updateBankroll={updateBankroll}
           updateHistory={updateHandHistory}
           bet={bet}
           updateBet={setBet}
+          endSession={endSession}
         />
       )}
       {undefined && <HandHistroy handHistory={handHistory} />}

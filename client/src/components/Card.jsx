@@ -2,35 +2,45 @@ import React from "react";
 import { GiClubs, GiSpades, GiDiamonds, GiHearts } from "react-icons/gi";
 
 function Card({ rank, suit, value, hidden = false }) {
+  // If the card is hidden, return a face-down card.
   if (hidden) {
-    return <div class="card-facedown"></div>;
+    return <div id="card-facedown" />;
   }
 
-  let suitImg;
+  let SuitIcon;
+  let suitColor = "black";
 
-  switch (suit) {
+  switch (suit.toLowerCase()) {
     case "clubs":
-      suitImg = <GiClubs />;
+      SuitIcon = <GiClubs />;
       break;
     case "spades":
-      suitImg = <GiSpades />;
+      SuitIcon = <GiSpades />;
       break;
     case "diamonds":
-      suitImg = <GiDiamonds />;
+      SuitIcon = <GiDiamonds />;
+      suitColor = "red";
       break;
     case "hearts":
-      suitImg = <GiHearts />;
+      SuitIcon = <GiHearts />;
+      suitColor = "red";
       break;
     default:
-      "N/A";
+      SuitIcon = null;
       break;
   }
 
   return (
-    <div class="card">
-      <span class="top-rank">{rank}</span>
-      <span class="suit">{suitImg}</span>
-      <span class="bottom-rank">{rank}</span>
+    <div id="card">
+      <span id="top-rank" style={{ color: suitColor }}>
+        {rank}
+      </span>
+      <span id="suit" style={{ color: suitColor }}>
+        {SuitIcon}
+      </span>
+      <span id="bottom-rank" style={{ color: suitColor }}>
+        {rank}
+      </span>
     </div>
   );
 }
