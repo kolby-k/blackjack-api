@@ -76,14 +76,8 @@ function Table({
 
   if (loading) return <Loader />;
 
-  const handNotStarted = !hand;
   const handInProgress =
     hand && (hand?.phase === "player_turn" || hand?.phase === "dealer_turn");
-  const handIsComplete = hand?.phase === "completed";
-  const turn =
-    hand && hand?.phase === "player_turn" ? "Your Turn" : "Dealer Turn";
-
-  const bettingAllowed = !hand || handIsComplete;
 
   return (
     <div id="table">

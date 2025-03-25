@@ -51,7 +51,7 @@ function Betting({
             onClick={dealHand}
             disabled={loading}
             style={
-              "bg-blue-700 border-2 rounded-md border-blue-200 p-4 w-[300px] mx-auto mt-4 text-blue-200 font-bold"
+              "bg-blue-700  hover:bg-blue-600 border-2 rounded-md border-blue-200 p-4 w-[300px] mx-auto mt-4 text-blue-200 font-bold"
             }
           />
         </div>

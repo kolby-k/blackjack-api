@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
 import { GiClubs, GiSpades, GiDiamonds, GiHearts } from "react-icons/gi";
 
-function Card({ rank, suit, value, hidden = false }) {
+function Card({ rank, suit, value, index, hidden = false }) {
   // If the card is hidden, return a face-down card.
+
   if (hidden) {
     return <div id="card-facedown" />;
   }
@@ -31,7 +32,7 @@ function Card({ rank, suit, value, hidden = false }) {
   }
 
   return (
-    <div id="card">
+    <div id={"card"}>
       <span id="top-rank" style={{ color: suitColor }}>
         {rank}
       </span>

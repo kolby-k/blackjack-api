@@ -44,7 +44,7 @@ function SessionManager({ session, updateSession, endSession, netChange }) {
           </h1>
         )}
         {sessionInProgress ? (
-          <span className="flex flex-col items-center justify-center">
+          <span className="flex flex-col items-center">
             <h2 className="text-slate-300 text-xl font-medium mx-auto">
               Current Balance: ${session.playerBankroll}{" "}
               {(netChange > 0 || netChange < 0) && (

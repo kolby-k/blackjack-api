@@ -25,14 +25,11 @@ class Hand {
   computeOutcomeAndPayout() {
     const playerTotal = this.getHandTotal(this.playerHand);
     const dealerTotal = this.getHandTotal(this.dealerHand);
-    console.log("pT: ", playerTotal);
-    console.log("dT: ", dealerTotal);
+
     const playerHas2CardBlackjack =
       this.playerHand.length === 2 && playerTotal === 21;
     const dealerHas2CardBlackjack =
       this.dealerHand.length === 2 && dealerTotal === 21;
-    console.log("playerHas2CardBlackjack: ", playerHas2CardBlackjack);
-    console.log("dealerHas2CardBlackjack: ", dealerHas2CardBlackjack);
 
     if (playerHas2CardBlackjack && dealerHas2CardBlackjack) {
       return { outcome: "push", net: 0 };

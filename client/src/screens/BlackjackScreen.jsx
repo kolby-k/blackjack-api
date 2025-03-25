@@ -30,6 +30,13 @@ function BlackjackScreen() {
 
   return (
     <div id="screen">
+      <a
+        target="_blank"
+        className="absolute top-20 left-2 text-sky-400 font-semibold"
+        href="https://github.com/kolby-k/blackjack-api/blob/main/server/src/routes.js"
+      >
+        View API Source Code - GitHub
+      </a>
       <SessionManager
         session={session}
         updateSession={setSession}
@@ -49,7 +56,7 @@ function BlackjackScreen() {
           endSession={endSession}
         />
       )}
-      {undefined && <HandHistroy handHistory={handHistory} />}
+      {true && <HandHistroy handHistory={handHistory} />}
     </div>
   );
 }

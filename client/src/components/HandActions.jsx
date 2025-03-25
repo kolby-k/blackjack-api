@@ -19,7 +19,7 @@ function HandActions({
             title={action}
             onClick={() => handlePlayerAction(action)}
             style={
-              "bg-blue-500 border-2 border-blue-200 p-4 w-1/3 mx-auto mt-4"
+              "bg-blue-800 border-2 border-blue-200 hover:bg-blue-700 rounded-md text-slate-100 font-bold p-4 w-1/3 mx-auto mt-4"
             }
           />
         ))}

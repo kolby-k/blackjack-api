@@ -16,6 +16,7 @@ function Hand({ isPlayer, cards = [], total }) {
                 rank={card.rank}
                 suit={card.suit}
                 value={card.value}
+                index={idx}
               />
             );
           })}
